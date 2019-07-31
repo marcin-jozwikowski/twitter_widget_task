@@ -1,0 +1,23 @@
+version: "3"
+services:
+    web: #more info: http://dockerfile.readthedocs.io/en/latest/content/DockerImages/dockerfiles/php-apache-dev.html
+        # To login to this container as web-server user run command:
+        #   docker exec -ti -u application twt-web bash
+        image: webdevops/php-apache-dev:ubuntu-18.04
+        ports:
+            - "80:80"
+            - "443:443"
+            - "9000:9000"
+        environment:
+            - WEB_ALIAS_DOMAIN=twitter.loc
+            - WEB_DOCUMENT_ROOT=/var/www/public
+            - PHP_DISPLAY_ERRORS=1
+            - PHP_DEBUGGER=xdebug
+            - XDEBUG_REMOTE_AUTOSTART=0
+            - XDEBUG_REMOTE_CONNECT_BACK=off
+            - XDEBUG_REMOTE_PORT=9091
+            - XDEBUG_REMOTE_HOST=<YOUR_IP>
+            - PHP_IDE_CONFIG=serverName=twitter.loc
+        volumes:
+            - ./:/var/www
+        container_name: twt-web
