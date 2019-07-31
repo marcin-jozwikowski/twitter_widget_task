@@ -32,10 +32,6 @@ class TwitterApiV11 implements TwitterApiInterface
      */
     private $tokenSecret;
     /**
-     * @var TwitterOAuth
-     */
-    private $connection;
-    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -74,18 +70,6 @@ class TwitterApiV11 implements TwitterApiInterface
     }
 
     /**
-     * @return TwitterOAuth
-     */
-    private function connect()
-    {
-        if (empty($this->connection)) {
-            $this->connection = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $this->token, $this->tokenSecret);
-        }
-
-        return $this->connection;
-    }
-
-    /**
      * @param string $uri
      * @param array|null $params
      * @return array
@@ -94,7 +78,8 @@ class TwitterApiV11 implements TwitterApiInterface
     private function getJsonResponse(string $uri, ?array $params = []): array
     {
         try {
-            $result = $this->connect()->get($uri, $params);
+            $connection = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $this->token, $this->tokenSecret);
+            $result = $connection->get($uri, $params);
         } catch (TwitterOAuthException $e) {
             $this->logger->error($e->getMessage());
             throw new TwitterAPIException(TwitterAPIException::AUTHENTICATION_ERROR);
@@ -113,6 +98,6 @@ class TwitterApiV11 implements TwitterApiInterface
             throw new TwitterAPIException(TwitterAPIException::GENERAL_ERROR);
         }
 
-        return (array) $result;
+        return (array)$result;
     }
 }
