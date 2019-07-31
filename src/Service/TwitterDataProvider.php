@@ -4,6 +4,8 @@
 namespace App\Service;
 
 
+use Generator;
+
 class TwitterDataProvider
 {
     /**
@@ -16,8 +18,8 @@ class TwitterDataProvider
         $this->twitterApi = $twitterApi;
     }
 
-    public function getUserTweets(string $username): array
+    public function getUserTweets(string $username): Generator
     {
-        return $this->twitterApi->getUserTweets($username);
+        yield from $this->twitterApi->getUserTweets($username);
     }
 }

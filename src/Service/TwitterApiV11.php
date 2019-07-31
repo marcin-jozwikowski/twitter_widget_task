@@ -7,6 +7,7 @@ namespace App\Service;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use Abraham\TwitterOAuth\TwitterOAuthException;
 use App\Exception\TwitterAPIException;
+use Generator;
 use Psr\Log\LoggerInterface;
 
 class TwitterApiV11 implements TwitterApiInterface
@@ -14,6 +15,7 @@ class TwitterApiV11 implements TwitterApiInterface
     const ENDPOINT_TEST_CREDENTIALS = "account/verify_credentials";
     const ENDPOINT_USER_TWEETS = 'statuses/user_timeline';
     const COULD_NOT_AUTHENTICATE_ERROR_CODE = 32;
+    const URL_FORMAT = "https://twitter.com/%s/status/%s";
 
     /**
      * @var string
@@ -47,16 +49,18 @@ class TwitterApiV11 implements TwitterApiInterface
 
     /**
      * @param string $username
-     * @return array
+     * @return Generator
      * @throws TwitterAPIException
      */
-    function getUserTweets(string $username): array
+    function getUserTweets(string $username): Generator
     {
-        return $this->getJsonResponse(self::ENDPOINT_USER_TWEETS, [
+        $result = $this->getJsonResponse(self::ENDPOINT_USER_TWEETS, [
             'screen_name' => $username,
             "count" => 25,
             "exclude_replies" => true
         ]);
+
+        yield from $this->parseTweets($result);
     }
 
     function testConnection(): bool
@@ -99,5 +103,16 @@ class TwitterApiV11 implements TwitterApiInterface
         }
 
         return (array)$result;
+    }
+
+    private function parseTweets(array $result): Generator
+    {
+        foreach ($result as $tweet)
+        {
+            yield [
+                "content" => $tweet->text,
+                "url" => sprintf(self::URL_FORMAT, $tweet->user->screen_name, $tweet->id_str),
+            ];
+        }
     }
 }

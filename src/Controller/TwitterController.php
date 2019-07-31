@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Exception\TwitterAPIException;
 use App\Service\TwitterDataProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,7 +26,19 @@ class TwitterController extends AbstractController
      */
     public function getData(string $username, TwitterDataProvider $twitter)
     {
-        ;
-        return $this->json($twitter->getUserTweets($username));
+        $result = [
+            "status" => "ERROR",
+            "message" => "unknown"
+        ];
+        try {
+            $result = [
+                "status" => "OK",
+                "tweets" => iterator_to_array($twitter->getUserTweets($username), true)
+            ];
+        } catch (TwitterAPIException $e) {
+            $result["message"] = $e->getMessage();
+        }
+
+        return $this->json($result);
     }
 }
