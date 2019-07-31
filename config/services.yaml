@@ -25,3 +25,11 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Service\TwitterApiV11:
+        arguments:
+            $consumerKey: '%env(string:TWITTER_CONSUMER_KEY)%'
+            $consumerSecret: '%env(string:TWITTER_CONSUMER_SECRET)%'
+            $token: '%env(string:TWITTER_TOKEN)%'
+            $tokenSecret: '%env(string:TWITTER_TOKEN_SECRET)%'
+            $logger: '@monolog.logger.request'

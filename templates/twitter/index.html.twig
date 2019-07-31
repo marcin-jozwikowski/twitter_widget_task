@@ -1,2 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block title %}Twitter Widget Example {% endblock %}
+
+{% block body %}
+    <p>Example: <a href="{{ path('data_parse', {username: "neiltyson"}) }}">{{ path('data_parse', {username: "neiltyson"}) }}</a> </p>
+{% endblock %}

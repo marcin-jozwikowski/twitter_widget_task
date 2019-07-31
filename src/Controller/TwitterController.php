@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Service\TwitterDataProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,11 +20,12 @@ class TwitterController extends AbstractController
     /**
      * @Route("/tweets/{username}", name="data_parse", requirements={"username"="[\w\d_]{1,15}"})
      * @param string $username
+     * @param TwitterDataProvider $twitter
      * @return JsonResponse
      */
-    public function getData(string $username)
+    public function getData(string $username, TwitterDataProvider $twitter)
     {
-
-        return $this->json(['hello' => 'world']);
+        ;
+        return $this->json($twitter->getUserTweets($username));
     }
 }
