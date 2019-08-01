@@ -1,30 +1,27 @@
 {% extends 'base.html.twig' %}
 {% block title %}Twitter Widget Example {% endblock %}
-
+{% set scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="{{ app.request.getSchemeAndHttpHost() }}{{asset('widget.js')}}"></script>
+    <script>
+        testFeed.init('twitter_feed_widget', {url: "{{ url('data_parse', {username: "neiltyson"}) }}"});
+    </script>
+{% endset %}
+{% set container %}
+    <div id="twitter_feed_widget"></div>
+{% endset %}
 {% block body %}
     <p>Example: <a href="{{ path('data_parse', {username: "neiltyson"}) }}">{{ path('data_parse', {username: "neiltyson"}) }}</a> </p>
 
     <h2>Usage</h2>
     <p>Place following code at the end of your &lt;BODY&gt; tag:</p>
-    <pre>
-        &lt;script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"&gt;&lt;/script&gt;
-        &lt;script src="test_feed.js"&gt;&lt;/script&gt;
-        &lt;script&gt;
-            testFeed.init("twitter_feed_widget", {url: "{{ url('data_parse', {username: "neiltyson"}) }}"});
-        &lt;/script&gt;
-    </pre>
+    <pre>{{ scripts|escape }}</pre>
     <p>Add followind code anywhere on your site:</p>
-    <pre>
-        &lt;div id="twitter_feed_widget"&gt;&lt;/div&gt;
-    </pre>
+    <pre>{{ container|escape }}</pre>
 
     <h2>Example</h2>
-    <div id="twitter_feed_widget"></div>
+    {{ container|raw }}
 {% endblock %}
 {% block javascripts %}
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="test_feed.js"></script>
-<script>
-    testFeed.init('twitter_feed_widget', {url: "{{ path('data_parse', {username: "neiltyson"}) }}"});
-</script>
+    {{ scripts|raw }}
 {% endblock %}
