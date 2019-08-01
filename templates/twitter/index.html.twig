@@ -3,4 +3,28 @@
 
 {% block body %}
     <p>Example: <a href="{{ path('data_parse', {username: "neiltyson"}) }}">{{ path('data_parse', {username: "neiltyson"}) }}</a> </p>
+
+    <h2>Usage</h2>
+    <p>Place following code at the end of your &lt;BODY&gt; tag:</p>
+    <pre>
+        &lt;script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"&gt;&lt;/script&gt;
+        &lt;script src="test_feed.js"&gt;&lt;/script&gt;
+        &lt;script&gt;
+            testFeed.init("twitter_feed_widget", {url: "{{ url('data_parse', {username: "neiltyson"}) }}"});
+        &lt;/script&gt;
+    </pre>
+    <p>Add followind code anywhere on your site:</p>
+    <pre>
+        &lt;div id="twitter_feed_widget"&gt;&lt;/div&gt;
+    </pre>
+
+    <h2>Example</h2>
+    <div id="twitter_feed_widget"></div>
+{% endblock %}
+{% block javascripts %}
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="test_feed.js"></script>
+<script>
+    testFeed.init('twitter_feed_widget', {url: "{{ path('data_parse', {username: "neiltyson"}) }}"});
+</script>
 {% endblock %}

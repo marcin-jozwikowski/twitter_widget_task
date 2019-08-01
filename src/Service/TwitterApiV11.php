@@ -107,7 +107,7 @@ class TwitterApiV11 implements TwitterApiInterface
 
     private function parseTweets(array $result): Generator
     {
-        foreach ($result as $tweet)
+        foreach ($result as $id => $tweet)
         {
             yield [
                 "content" => $tweet->text,

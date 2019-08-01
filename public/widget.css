@@ -1,0 +1,36 @@
+div#twitter_widget {
+    width: 100%;
+    color: black;
+    min-width: 280px;
+}
+
+.loading {
+    background: #ffa5005e;
+    border: 1px solid #ffa50096;
+    border-radius: 5px;
+    padding: 2px;
+    text-align: center;
+}
+
+.tweet {
+    border: 1px solid #0000ff45;
+    border-radius: 5px;
+    transition: .1s linear;
+    margin: 3px 0;
+}
+
+.tweet:hover {
+    background-color: #0000ff26;
+}
+
+.tweet a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: auto;
+    padding: 7px;
+}
+
+.loading p {
+    margin: 0;
+}
