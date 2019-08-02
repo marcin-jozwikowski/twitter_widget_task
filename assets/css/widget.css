@@ -3,13 +3,26 @@ div#twitter_widget {
     color: black;
     min-width: 280px;
 }
+.loading p,
+.error p{
+    margin: 0;
+}
+
+.loading,
+.error {
+    border-radius: 5px;
+    padding: 2px;
+    text-align: center;
+}
 
 .loading {
     background: #ffa5005e;
     border: 1px solid #ffa50096;
-    border-radius: 5px;
-    padding: 2px;
-    text-align: center;
+}
+
+.error {
+    background: rgba(255, 3, 0, 0.53);
+    border: 1px solid rgba(226, 0, 3, 0.84);
 }
 
 .tweet {
@@ -29,8 +42,4 @@ div#twitter_widget {
     display: block;
     width: auto;
     padding: 7px;
-}
-
-.loading p {
-    margin: 0;
 }

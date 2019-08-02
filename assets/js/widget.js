@@ -6,7 +6,13 @@ Vue.component('twitter-widget', {
     data: function () {
         return {
             tweets: [],
-            is_loading: true,
+            statuses: {
+                ok: 0,
+                loading: 1,
+                error: 2
+            },
+            status: 1,
+            errorMessage: null,
             dataCallInterval: this.interval,
             callTimeout: null
         }
@@ -28,37 +34,54 @@ Vue.component('twitter-widget', {
         this.loadTweets();
     },
     template: '<div id="twitter_widget">\n' +
-              '    <link rel="stylesheet" type="text/css" :href="styleUrl">\n' +
-              '    <div v-show="is_loading" class="loading">\n' +
-              '        <p>Loading...</p>\n' +
-              '    </div>\n' +
-              '    <div class="tweets">\n' +
-              '        <div class="tweet" v-for="tweet in tweets">\n' +
-              '            <a target="_blank" :href="tweet.url" v-html="tweet.content"></a>\n' +
-              '        </div>\n' +
-              '    </div>\n' +
-              '</div>',
-    methods:  {
+        '    <link rel="stylesheet" type="text/css" :href="styleUrl">\n' +
+        '    <div v-show="this.status==this.statuses.loading" class="loading">\n' +
+        '        <p>Loading...</p>\n' +
+        '    </div>\n' +
+        '    <div v-show="this.status==this.statuses.error" class="error">\n' +
+        '        <p v-html="errorMessage"></p>\n' +
+        '    </div>\n' +
+        '    <div class="tweets">\n' +
+        '        <div class="tweet" v-for="tweet in tweets">\n' +
+        '            <a target="_blank" :href="tweet.url" v-html="tweet.content"></a>\n' +
+        '        </div>\n' +
+        '    </div>\n' +
+        '</div>',
+    methods: {
+        setTweets: function (newTweets) {
+            this.tweets = newTweets;
+            this.status = this.statuses.ok;
+        },
+        setError: function (error) {
+            this.errorMessage = error;
+            this.status = this.statuses.error;
+        },
+        onNetworkError: function() {
+            this.setError("Network Connection Error")
+            this.callTimeout = setTimeout(this.loadTweets, 10000);
+        },
         loadTweets: function () {
             let request = new XMLHttpRequest(),
                 vueSelf = this;
             request.open('GET', vueSelf.dataUrl, true);
             request.onload = function () {
-                let response = JSON.parse(request.responseText);
-                if (response.hasOwnProperty('status') && response.status === "OK") {
-                    vueSelf.tweets = response.tweets;
-                } else {
-                    console.log("Error loading");
-                    console.log(response);
+                let response;
+                try {
+                    response = JSON.parse(request.responseText);
+                } catch (e) {
+                    vueSelf.setError("Data corrupted");
+                    return;
                 }
-                vueSelf.is_loading = false;
+                if (response.hasOwnProperty('status') && response.status === "OK") {
+                    vueSelf.setTweets(response.tweets)
+                } else {
+                    vueSelf.setError(response.message);
+                }
                 vueSelf.callTimeout = setTimeout(vueSelf.loadTweets, vueSelf.dataCallInterval)
             };
-            request.onerror = function () {
-                vueSelf.is_loading = false;
-                vueSelf.callTimeout = setTimeout(vueSelf.loadTweets, 10000);
-            };
-            vueSelf.is_loading = true;
+            request.onerror = vueSelf.onNetworkError;
+            request.ontimeout = vueSelf.onNetworkError;
+            vueSelf.status = vueSelf.statuses.loading;
             request.send();
         }
     }

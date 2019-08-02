@@ -1,4 +1,6 @@
-{{ encore_entry_script_tags('twitterWidget') }}
+{% for file in encore_entry_js_files('twitterWidget') %}
+<script src="{{ absolute_url(asset(file)) }}"></script>
+{% endfor %}
         <script>
             TwitterWidget.init('twitter_feed_widget', '{{ app.request.getSchemeAndHttpHost() }}', '{{ path('data_parse', {username: username}) }}');
         </script>
