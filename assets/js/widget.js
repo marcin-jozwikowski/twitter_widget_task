@@ -1,5 +1,7 @@
 /*global Vue */
 
+import Vue from '../../node_modules/vue/dist/vue.js';
+
 Vue.component('twitter-widget', {
     data: function () {
         return {
@@ -18,7 +20,7 @@ Vue.component('twitter-widget', {
         this.loadTweets();
     },
     template: '<div id="twitter_widget">\n' +
-              '    <link rel="stylesheet" type="text/css" href="widget.css">\n' +
+              '    <link rel="stylesheet" type="text/css" href="build/twitterWidgetStyle.css">\n' +
               '    <div v-show="is_loading" class="loading">\n' +
               '        <p>Loading...</p>\n' +
               '    </div>\n' +
@@ -54,7 +56,7 @@ Vue.component('twitter-widget', {
     }
 });
 
-testFeed = {
+let testFeed = {
     defaultParameters: {
         loadInterval: 60000
     },
@@ -74,3 +76,7 @@ testFeed = {
         else runApp();
     }
 };
+
+export function init(elemID, params) {
+    testFeed.init(elemID, params);
+}

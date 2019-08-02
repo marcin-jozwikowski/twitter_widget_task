@@ -1,10 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block title %}Twitter Widget Example {% endblock %}
 {% set scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="{{ app.request.getSchemeAndHttpHost() }}{{asset('widget.js')}}"></script>
+    {{ encore_entry_script_tags('twitterWidget') }}
     <script>
-        testFeed.init('twitter_feed_widget', {url: "{{ url('data_parse', {username: "neiltyson"}) }}"});
+        TwitterWidget.init('twitter_feed_widget', {url: "{{ url('data_parse', {username: "neiltyson"}) }}"});
     </script>
 {% endset %}
 {% set container %}
