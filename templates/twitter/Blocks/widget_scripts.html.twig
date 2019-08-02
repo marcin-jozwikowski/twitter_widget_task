@@ -1,0 +1,4 @@
+{{ encore_entry_script_tags('twitterWidget') }}
+        <script>
+            TwitterWidget.init('twitter_feed_widget', {url: "{{ url('data_parse', {username: username}) }}"});
+        </script>

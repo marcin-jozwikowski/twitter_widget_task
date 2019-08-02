@@ -3,19 +3,35 @@
 namespace App\Controller;
 
 use App\Exception\TwitterAPIException;
+use App\Form\UsernameForm;
 use App\Service\TwitterDataProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TwitterController extends AbstractController
 {
     /**
      * @Route("/", name="homepage")
+     * @param Request $request
+     * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return $this->render('twitter/index.html.twig');
+        $username = [];
+        $form = $this->createForm(UsernameForm::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $username = $form->getData()['username'];
+        }
+
+        return $this->render('twitter/index.html.twig', [
+            'form' => $form->createView(),
+            'username' => $username
+        ]);
     }
 
     /**

@@ -1,26 +1,36 @@
 {% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
 {% block title %}Twitter Widget Example {% endblock %}
-{% set scripts %}
-    {{ encore_entry_script_tags('twitterWidget') }}
-    <script>
-        TwitterWidget.init('twitter_feed_widget', {url: "{{ url('data_parse', {username: "neiltyson"}) }}"});
-    </script>
-{% endset %}
-{% set container %}
-    <div id="twitter_feed_widget"></div>
-{% endset %}
+{% if username is not empty %}
+    {% set scritps_content %}
+        {{ include('twitter/Blocks/widget_scripts.html.twig', {username: username}) }}
+    {% endset %}
+{% endif %}
 {% block body %}
-    <p>Example: <a href="{{ path('data_parse', {username: "neiltyson"}) }}">{{ path('data_parse', {username: "neiltyson"}) }}</a> </p>
+    <div class="container">
+        <div class="well">
+            <h2>Fill in form to see widget in action</h2>
+            {{ form(form) }}
+        </div>
 
-    <h2>Usage</h2>
-    <p>Place following code at the end of your &lt;BODY&gt; tag:</p>
-    <pre>{{ scripts|escape }}</pre>
-    <p>Add followind code anywhere on your site:</p>
-    <pre>{{ container|escape }}</pre>
-
-    <h2>Example</h2>
-    {{ container|raw }}
+        {% if username is not empty %}
+            <h2>Widget usage:</h2>
+            <p>Place following code at the end of your &lt;BODY&gt; tag:</p>
+            <pre>{{ scritps_content|escape }}</pre>
+            <p>Add followind code anywhere on your site:</p>
+            <pre>   {{ include('twitter/Blocks/widget_container.html.twig') | escape }}</pre>
+            <h2>Example</h2>
+            <div class="row justify-content-md-center">
+                <div class="col-5">
+                    {% include('twitter/Blocks/widget_container.html.twig') | raw %}
+                </div>
+            </div>
+            {% block javascripts %}{{ scritps_content|raw }}{% endblock %}
+        {% endif %}
+    </div>
 {% endblock %}
-{% block javascripts %}
-    {{ scripts|raw }}
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 {% endblock %}
