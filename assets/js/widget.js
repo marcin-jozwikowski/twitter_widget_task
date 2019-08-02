@@ -8,19 +8,27 @@ Vue.component('twitter-widget', {
             tweets: [],
             is_loading: true,
             dataCallInterval: this.interval,
-            callTimeout: null,
-            dataUrl: this.url
+            callTimeout: null
+        }
+    },
+    computed: {
+        dataUrl: function () {
+            return this.url + this.path;
+        },
+        styleUrl: function () {
+            return this.url + "/build/twitterWidgetStyle.css";
         }
     },
     props: [
         'url',
+        'path',
         'interval'
     ],
     mounted: function () {
         this.loadTweets();
     },
     template: '<div id="twitter_widget">\n' +
-              '    <link rel="stylesheet" type="text/css" href="build/twitterWidgetStyle.css">\n' +
+              '    <link rel="stylesheet" type="text/css" :href="styleUrl">\n' +
               '    <div v-show="is_loading" class="loading">\n' +
               '        <p>Loading...</p>\n' +
               '    </div>\n' +
@@ -63,7 +71,7 @@ let testFeed = {
 
     init: function (elemID, params) {
         const runApp = function () {
-            document.getElementById(elemID).innerHTML = "<twitter-widget :url='params.url' :interval='params.loadInterval'></twitter-widget>";
+            document.getElementById(elemID).innerHTML = "<twitter-widget :url='params.url' :path='params.feedPath' :interval='params.loadInterval'></twitter-widget>";
             new Vue({
                 el: '#' + elemID,
                 data: {
@@ -77,6 +85,9 @@ let testFeed = {
     }
 };
 
-export function init(elemID, params) {
-    testFeed.init(elemID, params);
+export function init(elemID, baseUrl, feed) {
+    testFeed.init(elemID, {
+        url: baseUrl,
+        feedPath: feed
+    });
 }
