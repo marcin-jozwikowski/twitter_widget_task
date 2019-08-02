@@ -20,7 +20,7 @@ class TwitterController extends AbstractController
      */
     public function index(Request $request)
     {
-        $username = [];
+        $username = '';
         $form = $this->createForm(UsernameForm::class);
         $form->handleRequest($request);
 

@@ -19,7 +19,7 @@ class UsernameForm extends AbstractType
                 'label' => 'Twitter Username to load',
                 'constraints' => [
                     new Regex([
-                        'pattern' => '/[\w\d_]{1,15}/i',
+                        'pattern' => '/^[\w\d_]{1,15}$/i',
                         'message' => 'Not a valid Twitter username',
                     ])
                 ]

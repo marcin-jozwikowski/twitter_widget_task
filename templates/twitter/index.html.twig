@@ -2,7 +2,7 @@
 {% form_theme form 'bootstrap_4_layout.html.twig' %}
 
 {% block title %}Twitter Widget Example {% endblock %}
-{% if username is not empty %}
+{% if not username is empty %}
     {% set scritps_content %}
         {{ include('twitter/Blocks/widget_scripts.html.twig', {username: username}) }}
     {% endset %}
@@ -13,8 +13,7 @@
             <h2>Fill in form to see widget in action</h2>
             {{ form(form) }}
         </div>
-
-        {% if username is not empty %}
+        {% if not username is empty %}
             <h2>Widget usage:</h2>
             <p>Place following code at the end of your &lt;BODY&gt; tag:</p>
             <pre>{{ scritps_content|escape }}</pre>
@@ -26,7 +25,7 @@
                     {% include('twitter/Blocks/widget_container.html.twig') | raw %}
                 </div>
             </div>
-            {% block javascripts %}{{ scritps_content|raw }}{% endblock %}
+             {{ scritps_content|raw }}
         {% endif %}
     </div>
 {% endblock %}
