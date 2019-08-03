@@ -22,6 +22,8 @@
         "symfony/yaml": "4.3.*"
     },
     "require-dev": {
+        "mockery/mockery": "^1.2",
+        "symfony/phpunit-bridge": "^4.3"
     },
     "config": {
         "preferred-install": {
