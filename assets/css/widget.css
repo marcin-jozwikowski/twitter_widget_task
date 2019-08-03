@@ -3,8 +3,7 @@ div#twitter_widget {
     color: black;
     min-width: 280px;
 }
-.loading p,
-.error p{
+p{
     margin: 0;
 }
 
@@ -36,10 +35,16 @@ div#twitter_widget {
     background-color: #0000ff26;
 }
 
-.tweet a {
+.tweet > a {
     text-decoration: none;
     color: inherit;
     display: block;
     width: auto;
     padding: 7px;
+}
+
+.tweet > a > .created {
+    text-align: right;
+    font-size: smaller;
+    color: #5f9ea0;
 }

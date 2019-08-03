@@ -6,6 +6,7 @@ namespace App\Service;
 
 use Abraham\TwitterOAuth\TwitterOAuthException;
 use App\Exception\TwitterAPIException;
+use DateTime;
 use Generator;
 use Psr\Log\LoggerInterface;
 
@@ -100,6 +101,7 @@ class TwitterApiV11 implements TwitterApiInterface
                 ];
             }
             yield [
+                "created" => (new DateTime($tweet->created_at))->format('Y-m-d H:i:s'),
                 "content" => empty($content) ? $tweet->text : $content,
                 "url" => sprintf(self::URL_FORMAT, $tweet->user->screen_name, $tweet->id_str),
                 "links" => $links
