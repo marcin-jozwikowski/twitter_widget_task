@@ -13,4 +13,4 @@ Timetracking:
 * _31.07.2019_ - 2h45m - Routing, API Connection with most frequent errors cought, Retrieving raw response and parsing it to only fields required
 * _1.08.2019_ - 4h15m - VueJS Widget using Twitter API results + better example display
 * _2.08.2019_ - 3h35m - Webpack Encore + docker build; Bootstrap + Username Form; Improved script init and error handling
-* _3.08.2019_ - 1h20 - Improved content links in feed; Added created date; Optimized JS; Separated Twitter connection
+* _3.08.2019_ - 2h05m - Improved content links in feed; Added created date; Optimized JS; Separated Twitter connection; Loading only new tweets
