@@ -92,7 +92,7 @@ class TwitterApiV11 implements TwitterApiInterface
     {
         foreach ($result as $id => $tweet) {
             // remove content links
-            $content = preg_replace('/(https?:\/\/t.co\/[\w\d]*)/i', '', $tweet->text);
+            $content = trim(preg_replace('/(https?:\/\/t.co\/[\w\d]*)/i', '', $tweet->text));
             $links = [];
             foreach ($tweet->entities->urls as $url) {
                 $links[] = [
@@ -100,7 +100,7 @@ class TwitterApiV11 implements TwitterApiInterface
                 ];
             }
             yield [
-                "content" => trim($content),
+                "content" => empty($content) ? $tweet->text : $content,
                 "url" => sprintf(self::URL_FORMAT, $tweet->user->screen_name, $tweet->id_str),
                 "links" => $links
             ];

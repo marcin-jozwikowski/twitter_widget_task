@@ -13,23 +13,31 @@ Vue.component('twitter-widget', {
             },
             status: 1,
             errorMessage: null,
-            dataCallInterval: this.interval,
             callTimeout: null
         }
     },
     computed: {
         dataUrl: function () {
-            return this.url + this.path;
+            return this.url + this.data_path;
         },
         styleUrl: function () {
-            return this.url + "/build/twitterWidgetStyle.css";
+            return this.url + this.style_path;
         }
     },
-    props: [
-        'url',
-        'path',
-        'interval'
-    ],
+    props: {
+        'url': {
+            required: true
+        },
+        'data_path': {
+            required: true
+        },
+        'style_path': {
+            default: "/build/twitterWidgetStyle.css"
+        },
+        'interval': {
+            default: 60000
+        }
+    },
     mounted: function () {
         this.loadTweets();
     },
@@ -57,8 +65,8 @@ Vue.component('twitter-widget', {
             this.errorMessage = error;
             this.status = this.statuses.error;
         },
-        onNetworkError: function() {
-            this.setError("Network Connection Error")
+        onNetworkError: function () {
+            this.setError("Network Connection Error");
             this.callTimeout = setTimeout(this.loadTweets, 10000);
         },
         loadTweets: function () {
@@ -78,7 +86,7 @@ Vue.component('twitter-widget', {
                 } else {
                     vueSelf.setError(response.message);
                 }
-                vueSelf.callTimeout = setTimeout(vueSelf.loadTweets, vueSelf.dataCallInterval)
+                vueSelf.callTimeout = setTimeout(vueSelf.loadTweets, vueSelf.interval)
             };
             request.onerror = vueSelf.onNetworkError;
             request.ontimeout = vueSelf.onNetworkError;
@@ -88,30 +96,18 @@ Vue.component('twitter-widget', {
     }
 });
 
-let testFeed = {
-    defaultParameters: {
-        loadInterval: 60000
-    },
-
-    init: function (elemID, params) {
-        const runApp = function () {
-            document.getElementById(elemID).innerHTML = "<twitter-widget :url='params.url' :path='params.feedPath' :interval='params.loadInterval'></twitter-widget>";
-            new Vue({
-                el: '#' + elemID,
-                data: {
-                    params: Object.assign(testFeed.defaultParameters, params)
-                }
-            });
-        };
-        if (window.addEventListener) window.addEventListener('load', runApp, false);
-        else if (window.attachEvent) window.attachEvent('onload', runApp);
-        else runApp();
-    }
-};
-
-export function init(elemID, baseUrl, feed) {
-    testFeed.init(elemID, {
-        url: baseUrl,
-        feedPath: feed
-    });
+export function init(elemID, baseUrl, feedPath) {
+    const runApp = function () {
+        document.getElementById(elemID).innerHTML = "<twitter-widget :url='baseUrl' :data_path='feedPath'></twitter-widget>";
+        new Vue({
+            el: '#' + elemID,
+            data: {
+                baseUrl: baseUrl,
+                feedPath: feedPath
+            }
+        });
+    };
+    if (window.addEventListener) window.addEventListener('load', runApp, false);
+    else if (window.attachEvent) window.attachEvent('onload', runApp);
+    else runApp();
 }
