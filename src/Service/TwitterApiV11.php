@@ -4,7 +4,6 @@
 namespace App\Service;
 
 
-use Abraham\TwitterOAuth\TwitterOAuth;
 use Abraham\TwitterOAuth\TwitterOAuthException;
 use App\Exception\TwitterAPIException;
 use Generator;
@@ -18,33 +17,18 @@ class TwitterApiV11 implements TwitterApiInterface
     const URL_FORMAT = "https://twitter.com/%s/status/%s";
 
     /**
-     * @var string
-     */
-    private $consumerKey;
-    /**
-     * @var string
-     */
-    private $consumerSecret;
-    /**
-     * @var string
-     */
-    private $token;
-    /**
-     * @var string
-     */
-    private $tokenSecret;
-    /**
      * @var LoggerInterface
      */
     private $logger;
+    /**
+     * @var TwitterConnectionInterface
+     */
+    private $connection;
 
-    public function __construct(LoggerInterface $logger, string $consumerKey, string $consumerSecret, string $token, string $tokenSecret)
+    public function __construct(LoggerInterface $logger, TwitterConnectionInterface $connection)
     {
-        $this->consumerKey = $consumerKey;
-        $this->consumerSecret = $consumerSecret;
-        $this->token = $token;
-        $this->tokenSecret = $tokenSecret;
         $this->logger = $logger;
+        $this->connection = $connection;
     }
 
     /**
@@ -82,8 +66,7 @@ class TwitterApiV11 implements TwitterApiInterface
     private function getJsonResponse(string $uri, ?array $params = []): array
     {
         try {
-            $connection = new TwitterOAuth($this->consumerKey, $this->consumerSecret, $this->token, $this->tokenSecret);
-            $result = $connection->get($uri, $params);
+            $result = $this->connection->get($uri, $params);
         } catch (TwitterOAuthException $e) {
             $this->logger->error($e->getMessage());
             throw new TwitterAPIException(TwitterAPIException::AUTHENTICATION_ERROR);
