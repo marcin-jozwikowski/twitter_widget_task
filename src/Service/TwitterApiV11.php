@@ -34,16 +34,21 @@ class TwitterApiV11 implements TwitterApiInterface
 
     /**
      * @param string $username
+     * @param string|null $latest
      * @return Generator
      * @throws TwitterAPIException
      */
-    function getUserTweets(string $username): Generator
+    function getUserTweets(string $username, string $latest = null): Generator
     {
-        $result = $this->getJsonResponse(self::ENDPOINT_USER_TWEETS, [
+        $params = [
             'screen_name' => $username,
             "count" => 25,
             "exclude_replies" => true
-        ]);
+        ];
+        if (!empty($latest)) {
+            $params["since_id"] = $latest;
+        }
+        $result = $this->getJsonResponse(self::ENDPOINT_USER_TWEETS, $params);
 
         yield from $this->parseTweets($result);
     }
@@ -101,6 +106,7 @@ class TwitterApiV11 implements TwitterApiInterface
                 ];
             }
             yield [
+                "id" => $tweet->id,
                 "created" => (new DateTime($tweet->created_at))->format('Y-m-d H:i:s'),
                 "content" => empty($content) ? $tweet->text : $content,
                 "url" => sprintf(self::URL_FORMAT, $tweet->user->screen_name, $tweet->id_str),

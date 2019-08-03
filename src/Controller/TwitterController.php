@@ -35,21 +35,23 @@ class TwitterController extends AbstractController
     }
 
     /**
-     * @Route("/tweets/{username}", name="data_parse", requirements={"username"="[\w\d_]{1,15}"})
+     * @Route("/tweets/{username}/{latest}", defaults={"latest"=null}, name="data_parse", requirements={"username"="[\w\d_]{1,15}", "latest"="[\d]{18,}"})
      * @param string $username
+     * @param string $latest
      * @param TwitterDataProvider $twitter
      * @return JsonResponse
      */
-    public function getData(string $username, TwitterDataProvider $twitter)
+    public function getData(string $username, TwitterDataProvider $twitter, string $latest = null)
     {
         $result = [
             "status" => "ERROR",
             "message" => "unknown"
         ];
         try {
+            // tweets need to be in reverse order
             $result = [
                 "status" => "OK",
-                "tweets" => iterator_to_array($twitter->getUserTweets($username), true)
+                "tweets" => array_reverse(iterator_to_array($twitter->getUserTweets($username, $latest), true))
             ];
         } catch (TwitterAPIException $e) {
             $result["message"] = $e->getMessage();

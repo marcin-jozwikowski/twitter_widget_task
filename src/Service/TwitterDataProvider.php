@@ -18,8 +18,8 @@ class TwitterDataProvider
         $this->twitterApi = $twitterApi;
     }
 
-    public function getUserTweets(string $username): Generator
+    public function getUserTweets(string $username, string $latest = null): Generator
     {
-        yield from $this->twitterApi->getUserTweets($username);
+        yield from $this->twitterApi->getUserTweets($username, $latest);
     }
 }

@@ -18,7 +18,11 @@ Vue.component('twitter-widget', {
     },
     computed: {
         dataUrl: function () {
-            return this.url + this.data_path;
+            let dataPath = this.url + this.data_path;
+            if (this.tweets.length > 0) {
+                dataPath += "/" + this.tweets[0]["id"];
+            }
+            return dataPath;
         },
         styleUrl: function () {
             return this.url + this.style_path;
@@ -61,7 +65,11 @@ Vue.component('twitter-widget', {
         '</div>',
     methods: {
         setTweets: function (newTweets) {
-            this.tweets = newTweets;
+            for (let id in newTweets) {
+                if (newTweets.hasOwnProperty(id)) {
+                    this.tweets.unshift(newTweets[id]);
+                }
+            }
             this.status = this.statuses.ok;
         },
         setError: function (error) {
