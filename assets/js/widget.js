@@ -44,6 +44,7 @@ Vue.component('twitter-widget', {
         '    <div class="tweets">\n' +
         '        <div class="tweet" v-for="tweet in tweets">\n' +
         '            <a target="_blank" :href="tweet.url" v-html="tweet.content"></a>\n' +
+        '            <a target="_blank" class="link" v-for="link in tweet.links" :href="link.url">See attachment</a>\n' +
         '        </div>\n' +
         '    </div>\n' +
         '</div>',

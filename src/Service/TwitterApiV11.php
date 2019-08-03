@@ -90,11 +90,19 @@ class TwitterApiV11 implements TwitterApiInterface
 
     private function parseTweets(array $result): Generator
     {
-        foreach ($result as $id => $tweet)
-        {
+        foreach ($result as $id => $tweet) {
+            // remove content links
+            $content = preg_replace('/(https?:\/\/t.co\/[\w\d]*)/i', '', $tweet->text);
+            $links = [];
+            foreach ($tweet->entities->urls as $url) {
+                $links[] = [
+                    'url' => $url->expanded_url,
+                ];
+            }
             yield [
-                "content" => $tweet->text,
+                "content" => trim($content),
                 "url" => sprintf(self::URL_FORMAT, $tweet->user->screen_name, $tweet->id_str),
+                "links" => $links
             ];
         }
     }
