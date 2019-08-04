@@ -3,6 +3,7 @@ Test Task
 
 ## Running Docker
 * Add `twitter.loc` domain to your local hosts
+* Copy `docker-compose.yml.dist` to `docker-compose.yml` and apply changes if needed
 * Run `docker-compose up -d` to start web server  
 * Run `docker exec -ti -u application twt-web bash -c "composer install"` to install PHP dependencies
 * Run `docker run --rm -ti -v "$PWD":/app -w /app node yarn install` to install JS dependencies
