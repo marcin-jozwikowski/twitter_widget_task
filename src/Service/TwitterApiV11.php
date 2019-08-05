@@ -72,10 +72,7 @@ class TwitterApiV11 implements TwitterApiInterface
     private function getJsonResponse(string $uri, ?array $params = []): array
     {
         try {
-            $result = $this->connection->get($uri, $params);
-        } catch (TwitterOAuthException $e) {
-            $this->logger->error($e->getMessage());
-            throw new TwitterAPIException(TwitterAPIException::AUTHENTICATION_ERROR);
+            $result = $this->connection->getJSONResponse($uri, $params);
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             throw new TwitterAPIException(TwitterAPIException::GENERAL_ERROR);

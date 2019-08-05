@@ -15,5 +15,6 @@ Test Task
 * _1.08.2019_ - 4h15m - VueJS Widget using Twitter API results + better example display
 * _2.08.2019_ - 3h35m - Webpack Encore + docker build; Bootstrap + Username Form; Improved script init and error handling
 * _3.08.2019_ - 3h00m - Improved content links in feed; Added created date; Optimized JS; Separated Twitter connection; Loading only new tweets; PHPUnit
+* _5.08.2019_ - 1h55m - Dropped TwitterAPI library in favor of custom connection + test
 
-## Total time spent: 14h35m
+## Total time spent: 16h30m

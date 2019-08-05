@@ -6,5 +6,5 @@ namespace App\Service;
 
 interface TwitterConnectionInterface
 {
-    function get($path, array $parameters = []);
+    function getJSONResponse($path, array $parameters = []);
 }

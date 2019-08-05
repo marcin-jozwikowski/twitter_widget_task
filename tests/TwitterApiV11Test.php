@@ -2,7 +2,6 @@
 
 namespace App\Tests;
 
-use Abraham\TwitterOAuth\TwitterOAuthException;
 use App\Exception\TwitterAPIException;
 use App\Service\TwitterApiV11;
 use App\Service\TwitterConnection;
@@ -67,7 +66,7 @@ class TwitterApiV11Test extends TestCase
 
     public function testGetUserTweets()
     {
-        $this->connection->shouldReceive('get')->with(TwitterApiV11::ENDPOINT_USER_TWEETS, [
+        $this->connection->shouldReceive('getJSONResponse')->with(TwitterApiV11::ENDPOINT_USER_TWEETS, [
             'screen_name' => self::USERNAME,
             "count" => 25,
             "exclude_replies" => true
@@ -84,7 +83,7 @@ class TwitterApiV11Test extends TestCase
         $this->properResponseObject[0]->entities->urls = [];
         $this->properResponseArray[0]['links'] = [];
 
-        $this->connection->shouldReceive('get')->with(TwitterApiV11::ENDPOINT_USER_TWEETS, [
+        $this->connection->shouldReceive('getJSONResponse')->with(TwitterApiV11::ENDPOINT_USER_TWEETS, [
             'screen_name' => self::USERNAME,
             "count" => 25,
             "exclude_replies" => true
@@ -99,7 +98,7 @@ class TwitterApiV11Test extends TestCase
     public function testGetUserTweets__removeLinksFromText()
     {
         $this->properResponseObject[0]->text = 'Test https://t.co/h2ytbv4CKZ';
-        $this->connection->shouldReceive('get')->with(TwitterApiV11::ENDPOINT_USER_TWEETS, [
+        $this->connection->shouldReceive('getJSONResponse')->with(TwitterApiV11::ENDPOINT_USER_TWEETS, [
             'screen_name' => self::USERNAME,
             "count" => 25,
             "exclude_replies" => true
@@ -113,7 +112,7 @@ class TwitterApiV11Test extends TestCase
 
     public function testGetUserTweets__since()
     {
-        $this->connection->shouldReceive('get')->with(TwitterApiV11::ENDPOINT_USER_TWEETS, [
+        $this->connection->shouldReceive('getJSONResponse')->with(TwitterApiV11::ENDPOINT_USER_TWEETS, [
             'screen_name' => self::USERNAME,
             "count" => 25,
             "exclude_replies" => true,
@@ -130,7 +129,7 @@ class TwitterApiV11Test extends TestCase
     {
         $this->expectException(TwitterAPIException::class);
         $this->expectExceptionMessage(TwitterAPIException::AUTHENTICATION_ERROR);
-        $this->connection->shouldReceive('get')->withAnyArgs()
+        $this->connection->shouldReceive('getJSONResponse')->withAnyArgs()
             ->andReturn((object)['errors' => [(object)['message' => 'Er', 'code' => TwitterApiV11::COULD_NOT_AUTHENTICATE_ERROR_CODE]]]);
         $this->logger->shouldReceive('error')->with("Er")->andReturnNull();
 
@@ -143,7 +142,7 @@ class TwitterApiV11Test extends TestCase
     {
         $this->expectException(TwitterAPIException::class);
         $this->expectExceptionMessage(TwitterAPIException::GENERAL_ERROR);
-        $this->connection->shouldReceive('get')->withAnyArgs()
+        $this->connection->shouldReceive('getJSONResponse')->withAnyArgs()
             ->andReturn((object)['errors' => [(object)['message' => 'Er2', 'code' => 1]]]);
         $this->logger->shouldReceive('error')->with("Er2")->andReturnNull();
 
@@ -154,30 +153,22 @@ class TwitterApiV11Test extends TestCase
 
     public function testTestConnection()
     {
-        $this->connection->shouldReceive('get')->with(TwitterApiV11::ENDPOINT_TEST_CREDENTIALS, [])
+        $this->connection->shouldReceive('getJSONResponse')->with(TwitterApiV11::ENDPOINT_TEST_CREDENTIALS, [])
             ->andReturn((object)['test' => 'ok']);
         $this->assertTrue($this->api->testConnection());
     }
 
     public function testTestConnection_Exception()
     {
-        $this->connection->shouldReceive('get')->with(TwitterApiV11::ENDPOINT_TEST_CREDENTIALS, [])
+        $this->connection->shouldReceive('getJSONResponse')->with(TwitterApiV11::ENDPOINT_TEST_CREDENTIALS, [])
             ->andThrow(\Exception::class, "NO");
-        $this->logger->shouldReceive('error')->with("NO")->andReturnNull();
-        $this->assertFalse($this->api->testConnection());
-    }
-
-    public function testTestConnection_TwitterOAuthException()
-    {
-        $this->connection->shouldReceive('get')->with(TwitterApiV11::ENDPOINT_TEST_CREDENTIALS, [])
-            ->andThrow(TwitterOAuthException::class, "NO");
         $this->logger->shouldReceive('error')->with("NO")->andReturnNull();
         $this->assertFalse($this->api->testConnection());
     }
 
     public function testTestConnection_Error()
     {
-        $this->connection->shouldReceive('get')->with(TwitterApiV11::ENDPOINT_TEST_CREDENTIALS, [])
+        $this->connection->shouldReceive('getJSONResponse')->with(TwitterApiV11::ENDPOINT_TEST_CREDENTIALS, [])
             ->andReturn((object)['errors' => [(object)['message' => 'Er', 'code' => 1]]]);
         $this->logger->shouldReceive('error')->with("Er")->andReturnNull();
         $this->assertFalse($this->api->testConnection());
